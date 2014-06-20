@@ -2,6 +2,7 @@ package samples;
 
 import com.sun.grizzly.http.SelectorThread;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,16 +11,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/eurosentiment")
-public class Application {
+public class Server {
 
     SimpleSentimentAnalyzer analyzer = new SimpleSentimentAnalyzer();
 
 
     @Path("sentiment")
     @POST
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSentiment(@DefaultValue("") @QueryParam("input") String text) {
-        return analyzer.getSentiment(text).toString();
+    public String getSentiment(String input) {
+        try {
+            JSONObject jsonInput = new JSONObject(input);
+            return analyzer.getSentiment(jsonInput.getString("input")).toString();
+        } catch(Exception e) {
+            throw new WebApplicationException(500);
+        }
     }
 
     public static void main(String[] args) throws IOException {
