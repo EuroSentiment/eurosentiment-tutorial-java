@@ -22,21 +22,9 @@ import client.NifInput;
 import client.NifOutput;
 import client.ResourceClient;
 import client.ServiceClient;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
-import utils.PropertiesUtil;
 
 import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
