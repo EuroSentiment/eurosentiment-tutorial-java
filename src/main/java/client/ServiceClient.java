@@ -24,12 +24,10 @@ import com.sun.jersey.api.client.WebResource;
 
 public class ServiceClient {
 
-    private String serviceUrl;
     private String token;
     private WebResource resource;
 
     public ServiceClient(String serviceUrl, String token) {
-        this.serviceUrl = serviceUrl;
         this.token = token;
         Client client = Client.create();
         if(serviceUrl != null) {

@@ -26,28 +26,31 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
+import utils.PropertiesUtil;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 @Component
 public class PositiveWordsMatcher {
 
-    @Value("${eurosentiment.language.detection.url}")
+    private PropertiesUtil properties;
+
     private String languageDetectionServiceUrl;
 
-    @Value("${eurosentiment.token}")
     private String token;
 
     private ServiceClient languageDetector;
 
-    public PositiveWordsMatcher() {
+    public PositiveWordsMatcher() throws FileNotFoundException {
+        this.properties = new PropertiesUtil("application.properties");
+        this.languageDetectionServiceUrl = this.properties.getProperty("eurosentiment.language.detection.url");
+        this.token = this.properties.getProperty("eurosentiment.token");
         this.languageDetector = new ServiceClient(this.languageDetectionServiceUrl, this.token);
     }
 
