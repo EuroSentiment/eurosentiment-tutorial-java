@@ -33,10 +33,6 @@ public class Server {
     @Autowired
     SimpleSentimentAnalyzer analyzer;
 
-    public Server() {
-        System.out.println("a");
-    }
-
     @RequestMapping(value = "/sentiment",
                     method = RequestMethod.POST,
                     produces = {"application/json"})

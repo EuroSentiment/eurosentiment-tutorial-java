@@ -18,10 +18,13 @@
  */
 package samples;
 
+import client.NifOutput;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class SimpleSentimentAnalyzer {
@@ -32,10 +35,31 @@ public class SimpleSentimentAnalyzer {
     @Autowired
     private NegativeWordsMatcher negativeWordsMatcher;
 
-    public JSONObject getSentiment(String text) {
-        System.out.println(negativeWordsMatcher);
-        positiveWordsMatcher.getPositiveWords("Esto es un texto en castellano y blablablabla");
-        return new JSONObject("{'sentiment': 7.3}");
+    public NifOutput getSentiment(String text) {
+        Map<String, Integer> negativeWords = negativeWordsMatcher.getNegativeWords(text);
+        Map<String, Integer> positiveWords = positiveWordsMatcher.getPositiveWords(text);
+        float sentiment = calculateSentiment(positiveWords, negativeWords);
+        return new NifOutput("{\"@context\": \"http://eurosentiment.eu/contexts/basecontext.jsonld\"," +
+                             "\"@type\":\"marl:SentimentAnalysis\"," +
+                             "\"marl:polarityValue\":" + sentiment +"}");
+
+    }
+
+    private float calculateSentiment(Map<String, Integer> positiveWords, Map<String, Integer> negativeWords) {
+        int positiveCount = sumMapValues(positiveWords);
+        int negativeCount = sumMapValues(negativeWords);
+        if ((positiveCount + negativeCount) > 0) {
+            return positiveCount/(positiveCount + negativeCount);
+        }
+        return 0.0f;
+    }
+
+    private int sumMapValues(Map<String, Integer> words) {
+        int result = 0;
+        for(Integer count:words.values()) {
+            result += count;
+        }
+        return result;
     }
 
 }

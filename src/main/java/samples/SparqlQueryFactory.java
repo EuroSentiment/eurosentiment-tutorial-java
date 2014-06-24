@@ -40,40 +40,13 @@ public class SparqlQueryFactory {
             "    }\n" +
             "}GROUP BY ?entry ORDER BY DESC(?count) limit 10\n";
 
-    public static final String ELECTRONICS_POSITIVE_ENTRIES = "PREFIX lemon: <http://lemon-model.net/lemon#> PREFIX marl: <http://purl.org/marl/ns/> SELECT ?entry count(?entry) as ?count from <http://www.eurosentiment.eu/dataset/electronics/es/paradigma/lexicon> \twhere { \t?entry lemon:sense ?sense . \t?sense marl:polarityValue ?polarityValue . \t?sense marl:hasPolarity <http://purl.org/marl/ns/positive> . \t?sense lemon:reference ?reference . \t} GROUP BY ?entry ORDER BY DESC(?count)";
+    public static final String ELECTRONICS_POSITIVE_ENTRIES = "PREFIX lemon: <http://lemon-model.net/lemon#> PREFIX marl: <http://purl.org/marl/ns/> SELECT ?wordWithSentiment from <http://www.eurosentiment.eu/dataset/electronics/%s/paradigma/lexicon> \twhere { \t?entry lemon:sense ?sense . \t?sense marl:polarityValue ?polarityValue . \t?sense marl:hasPolarity <http://purl.org/marl/ns/positive> . \t?sense lemon:reference ?reference .                  ?entryWithSentiment lemon:sense ?context.                 ?entryWithSentiment lemon:canonicalForm ?cf.                 ?cf lemon:writtenRep ?wordWithSentiment.  \t} GROUP BY ?wordWithSentiment";
 
-    public static final String HOTELS_POSITIVE_ENTRIES = "PREFIX lemon: &lt;http://lemon-model.net/lemon#&gt;\n" +
-            "PREFIX marl: &lt;http://purl.org/marl/ns/&gt;\n" +
-            "SELECT ?entry WHERE {\n" +
-            "    GRAPH &lt;http://www.eurosentiment.eu/dataset/hotel/%s/paradigma/lexicon&gt; {\n" +
-            "        ?entry lemon:sense ?sense .\n" +
-            "        ?sense marl:polarityValue ?polarityValue.\n" +
-            "        ?sense marl:hasPolarity &lt;http://purl.org/marl/ns/positive&gt; .\n" +
-            "        ?sense lemon:reference ?reference .\n" +
-            "    }\n" +
-            "} limit 10\n";
+    public static final String HOTELS_POSITIVE_ENTRIES = "PREFIX lemon: <http://lemon-model.net/lemon#> PREFIX marl: <http://purl.org/marl/ns/> SELECT ?wordWithSentiment from <http://www.eurosentiment.eu/dataset/hotel/%s/paradigma/lexicon> \twhere { \t?entry lemon:sense ?sense . \t?sense marl:polarityValue ?polarityValue . \t?sense marl:hasPolarity <http://purl.org/marl/ns/positive> . \t?sense lemon:reference ?reference .                  ?entryWithSentiment lemon:sense ?context.                 ?entryWithSentiment lemon:canonicalForm ?cf.                 ?cf lemon:writtenRep ?wordWithSentiment.  \t} GROUP BY ?wordWithSentiment";
 
-    public static final String ELECTRONICS_NEGATIVE_ENTRIES = "PREFIX lemon: &lt;http://lemon-model.net/lemon#&gt;\n" +
-            "PREFIX marl: &lt;http://purl.org/marl/ns/&gt;\n" +
-            "SELECT ?entry WHERE {\n" +
-            "    GRAPH &lt;http://www.eurosentiment.eu/dataset/electronics/%s/paradigma/lexicon&gt; {\n" +
-            "        ?entry lemon:sense ?sense .\n" +
-            "        ?sense marl:polarityValue ?polarityValue .\n" +
-            "        ?sense marl:hasPolarity &lt;http://purl.org/marl/ns/negative&gt; .\n" +
-            "        ?sense lemon:reference ?reference .\n" +
-            "    }\n" +
-            "}\n";
+    public static final String ELECTRONICS_NEGATIVE_ENTRIES = "PREFIX lemon: <http://lemon-model.net/lemon#> PREFIX marl: <http://purl.org/marl/ns/> SELECT ?wordWithSentiment from <http://www.eurosentiment.eu/dataset/electronics/%s/paradigma/lexicon> \twhere { \t?entry lemon:sense ?sense . \t?sense marl:polarityValue ?polarityValue . \t?sense marl:hasPolarity <http://purl.org/marl/ns/negative> . \t?sense lemon:reference ?reference .                  ?entryWithSentiment lemon:sense ?context.                 ?entryWithSentiment lemon:canonicalForm ?cf.                 ?cf lemon:writtenRep ?wordWithSentiment.  \t} GROUP BY ?wordWithSentiment";
 
-    public static final String HOTELS_NEGATIVE_ENTRIES = "PREFIX lemon: &lt;http://lemon-model.net/lemon#&gt;\n" +
-            "PREFIX marl: &lt;http://purl.org/marl/ns/&gt;\n" +
-            "SELECT ?entry WHERE {\n" +
-            "    GRAPH &lt;http://www.eurosentiment.eu/dataset/hotel/%s/paradigma/lexicon&gt; {\n" +
-            "        ?entry lemon:sense ?sense .\n" +
-            "        ?sense marl:polarityValue ?polarityValue .\n" +
-            "        ?sense marl:hasPolarity &lt;http://purl.org/marl/ns/negative&gt; .\n" +
-            "        ?sense lemon:reference ?reference .\n" +
-            "    }\n" +
-            "}\n";
+    public static final String HOTELS_NEGATIVE_ENTRIES = "PREFIX lemon: <http://lemon-model.net/lemon#> PREFIX marl: <http://purl.org/marl/ns/> SELECT ?wordWithSentiment from <http://www.eurosentiment.eu/dataset/hotel/%s/paradigma/lexicon> \twhere { \t?entry lemon:sense ?sense . \t?sense marl:polarityValue ?polarityValue . \t?sense marl:hasPolarity <http://purl.org/marl/ns/negative> . \t?sense lemon:reference ?reference .                  ?entryWithSentiment lemon:sense ?context.                 ?entryWithSentiment lemon:canonicalForm ?cf.                 ?cf lemon:writtenRep ?wordWithSentiment.  \t} GROUP BY ?wordWithSentiment";
 
     public static final String ELECTRONICS_WORDS_POLARITIES = "PREFIX lemon: &lt;http://lemon-model.net/lemon#&gt;\n" +
             "PREFIX marl: &lt;http://purl.org/marl/ns/&gt;\n" +

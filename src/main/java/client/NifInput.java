@@ -31,4 +31,8 @@ public class NifInput {
     public String asJson() {
         return json.toString();
     }
+
+    public String toString() {
+        return json.toString();
+    }
 }

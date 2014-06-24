@@ -22,45 +22,24 @@ import client.NifInput;
 import client.NifOutput;
 import client.ResourceClient;
 import client.ServiceClient;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
-import utils.PropertiesUtil;
 
 import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Component
-public class PositiveWordsMatcher {
+public class PositiveWordsMatcher extends WordsMatcher {
 
-    @Value("${eurosentiment.language.detection.url}")
-    private String languageDetectionServiceUrl;
-
-    @Value("${eurosentiment.resources.url}")
-    private String resourcesUrl;
-
-    @Value("${eurosentiment.token}")
-    private String token;
-
-    private ServiceClient languageDetector;
-
-    private ResourceClient resourceClient;
-
-    public JSONObject getPositiveWords(String text) {
+    public Map<String, Integer> getPositiveWords(String text) {
         NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':" + text + "}"));
         String language = languageResult.getJson().getString("dc:language");
         String query = SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_POSITIVE_ENTRIES, language);
         NifInput input = new NifInput("{'query':'" + query + "', " +
                                        "'format':'application/json'}");
         NifOutput wordsResults = this.resourceClient.request(input);
-        return wordsResults.getJson();
+        List<String> sentimentWords = extractWordsListFromResponse(wordsResults.getJson());
+        return matchWords(text, sentimentWords);
     }
 
     @PostConstruct

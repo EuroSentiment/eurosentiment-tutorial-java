@@ -18,8 +18,11 @@
  */
 package utils;
 
+import org.springframework.stereotype.Component;
+
 import java.text.Normalizer;
 
+@Component
 public class TextNormalizer {
 
     public static String normalizeText(String text) {

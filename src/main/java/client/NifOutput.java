@@ -32,4 +32,8 @@ public class NifOutput {
         return json;
     }
 
+    public String toString() {
+        return this.json.toString();
+    }
+
 }

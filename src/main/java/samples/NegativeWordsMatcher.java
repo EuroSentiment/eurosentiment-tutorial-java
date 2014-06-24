@@ -37,31 +37,21 @@ import utils.PropertiesUtil;
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Component
-public class NegativeWordsMatcher {
+public class NegativeWordsMatcher extends WordsMatcher{
 
-    @Value("${eurosentiment.language.detection.url}")
-    private String languageDetectionServiceUrl;
-
-    @Value("${eurosentiment.resources.url}")
-    private String resourcesUrl;
-
-    @Value("${eurosentiment.token}")
-    private String token;
-
-    private ServiceClient languageDetector;
-
-    private ResourceClient resourceClient;
-
-    public JSONObject getPositiveWords(String text) {
+    public Map<String, Integer> getNegativeWords(String text) {
         NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':" + text + "}"));
         String language = languageResult.getJson().getString("dc:language");
         String query = SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_NEGATIVE_ENTRIES, language);
         NifInput input = new NifInput("{'query':'" + query + "', " +
                 "'format':'application/json'}");
         NifOutput wordsResults = this.resourceClient.request(input);
-        return wordsResults.getJson();
+        List<String> sentimentWords = extractWordsListFromResponse(wordsResults.getJson());
+        return matchWords(text, sentimentWords);
     }
 
     @PostConstruct
