@@ -19,7 +19,9 @@
 package samples;
 
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SimpleSentimentAnalyzer {
 
     public JSONObject getSentiment(String text) {

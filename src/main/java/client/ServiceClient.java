@@ -32,7 +32,9 @@ public class ServiceClient {
         this.serviceUrl = serviceUrl;
         this.token = token;
         Client client = Client.create();
-        this.resource = client.resource(serviceUrl);
+        if(serviceUrl != null) {
+            this.resource = client.resource(serviceUrl);
+        }
     }
 
     public NifOutput request(NifInput input) {
