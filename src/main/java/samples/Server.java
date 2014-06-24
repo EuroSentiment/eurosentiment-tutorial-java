@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.WebApplicationException;
@@ -32,9 +33,12 @@ public class Server {
     @Autowired
     SimpleSentimentAnalyzer analyzer;
 
+    public Server() {
+        System.out.println("a");
+    }
+
     @RequestMapping(value = "/sentiment",
                     method = RequestMethod.POST,
-                    consumes = {"application/json"},
                     produces = {"application/json"})
     public String getSentiment(@RequestBody String input) {
         try {

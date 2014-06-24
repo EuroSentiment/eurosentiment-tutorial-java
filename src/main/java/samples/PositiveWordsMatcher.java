@@ -33,40 +33,40 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 import utils.PropertiesUtil;
 
+import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 @Component
 public class PositiveWordsMatcher {
 
-    private PropertiesUtil properties;
-
+    @Value("${eurosentiment.language.detection.url}")
     private String languageDetectionServiceUrl;
 
+    @Value("${eurosentiment.resources.url}")
+    private String resourcesUrl;
+
+    @Value("${eurosentiment.token}")
     private String token;
 
     private ServiceClient languageDetector;
 
-    public PositiveWordsMatcher() throws FileNotFoundException {
-        this.properties = new PropertiesUtil("application.properties");
-        this.languageDetectionServiceUrl = this.properties.getProperty("eurosentiment.language.detection.url");
-        this.token = this.properties.getProperty("eurosentiment.token");
-        this.languageDetector = new ServiceClient(this.languageDetectionServiceUrl, this.token);
-    }
+    private ResourceClient resourceClient;
 
     public JSONObject getPositiveWords(String text) {
-        NifOutput languageResult = this.languageDetector.request(new NifInput("{'input':" + text + "}"));
-        String language = languageResult.getJson().getJSONArray("entries").getJSONObject(0).getString("dc:language");
-        ResourceClient resourceClient = getResourceClient(language);
-        NifOutput wordsResults = resourceClient.request(
-                new NifInput("{'query':" + SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_POSITIVE_ENTRIES, language) + ", " +
-                             "'format':'application/sparql-results+json'}"));
+        NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':" + text + "}"));
+        String language = languageResult.getJson().getString("dc:language");
+        String query = SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_POSITIVE_ENTRIES, language);
+        NifInput input = new NifInput("{'query':'" + query + "', " +
+                                       "'format':'application/json'}");
+        NifOutput wordsResults = this.resourceClient.request(input);
         return wordsResults.getJson();
     }
 
-    public ResourceClient getResourceClient(String language) {
-        ResourceClient resourceClient = new ResourceClient("", "");
-        return resourceClient;
+    @PostConstruct
+    public void initClients() {
+        this.languageDetector = new ServiceClient(this.languageDetectionServiceUrl, this.token);
+        this.resourceClient =  new ResourceClient(this.resourcesUrl, this.token);
     }
 
 }

@@ -23,29 +23,51 @@ import client.NifOutput;
 import client.ResourceClient;
 import client.ServiceClient;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.stereotype.Component;
+import utils.PropertiesUtil;
 
+import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+
+@Component
 public class NegativeWordsMatcher {
+
+    @Value("${eurosentiment.language.detection.url}")
+    private String languageDetectionServiceUrl;
+
+    @Value("${eurosentiment.resources.url}")
+    private String resourcesUrl;
+
+    @Value("${eurosentiment.token}")
+    private String token;
 
     private ServiceClient languageDetector;
 
-    public NegativeWordsMatcher() {
-        this.languageDetector = new ServiceClient("url", "token");
-    }
+    private ResourceClient resourceClient;
 
-    public JSONObject getNegativeWords(String text) {
-        NifOutput languageResult = this.languageDetector.request(new NifInput("{'input':" + text + "}"));
-        String language = languageResult.getJson().getJSONArray("entries").getJSONObject(0).getString("dc:language");
-        ResourceClient resourceClient = getResourceClient(language);
-        NifOutput wordsResults = resourceClient.request(
-                new NifInput("{'query':" + SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_NEGATIVE_ENTRIES, language) + ", " +
-                        "'format':'application/sparql-results+json'}"));
+    public JSONObject getPositiveWords(String text) {
+        NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':" + text + "}"));
+        String language = languageResult.getJson().getString("dc:language");
+        String query = SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_NEGATIVE_ENTRIES, language);
+        NifInput input = new NifInput("{'query':'" + query + "', " +
+                "'format':'application/json'}");
+        NifOutput wordsResults = this.resourceClient.request(input);
         return wordsResults.getJson();
     }
 
-    public ResourceClient getResourceClient(String language) {
-        ResourceClient resourceClient = new ResourceClient("", "");
-        return resourceClient;
+    @PostConstruct
+    public void initialized() throws Exception {
+        this.languageDetector = new ServiceClient(this.languageDetectionServiceUrl, this.token);
+        this.resourceClient =  new ResourceClient(this.resourcesUrl, this.token);
     }
-
 
 }

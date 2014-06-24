@@ -19,12 +19,22 @@
 package samples;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleSentimentAnalyzer {
 
+    @Autowired
+    private PositiveWordsMatcher positiveWordsMatcher;
+
+    @Autowired
+    private NegativeWordsMatcher negativeWordsMatcher;
+
     public JSONObject getSentiment(String text) {
+        System.out.println(negativeWordsMatcher);
+        positiveWordsMatcher.getPositiveWords("Esto es un texto en castellano y blablablabla");
         return new JSONObject("{'sentiment': 7.3}");
     }
 
