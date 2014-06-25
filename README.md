@@ -15,3 +15,5 @@ Within this repository you'll find a complete example for creating a simple sent
 * [Creating your first sentiment analysis application.](https://github.com/mariomgal/eurosentiment-tutorial-java/wiki/Creating-your-first-sentiment-analysis-application.)
 * [Exposing your application as a service.](https://github.com/mariomgal/eurosentiment-tutorial-java/wiki/Exposing-your-application-as-a-service.)
 * [Registering your service in Eurosentiment.](https://github.com/mariomgal/eurosentiment-tutorial-java/wiki/Registering-your-service-in-Eurosentiment.)
+
+[EUROSENTIMENT PROJECT](http://eurosentiment.eu) (Grant Agreement no: 296277, Starting date: 01/09/2012, Project duration: 24 months)
