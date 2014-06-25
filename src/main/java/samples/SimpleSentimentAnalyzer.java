@@ -49,7 +49,7 @@ public class SimpleSentimentAnalyzer {
         int positiveCount = sumMapValues(positiveWords);
         int negativeCount = sumMapValues(negativeWords);
         if ((positiveCount + negativeCount) > 0) {
-            return positiveCount/(positiveCount + negativeCount);
+            return (positiveCount-negativeCount)/(positiveCount + negativeCount);
         }
         return 0.0f;
     }
