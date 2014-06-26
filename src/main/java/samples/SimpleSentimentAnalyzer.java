@@ -19,6 +19,7 @@
 package samples;
 
 import client.NifOutput;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,8 @@ import java.util.Map;
 @Component
 public class SimpleSentimentAnalyzer {
 
+    private static final Logger log = Logger.getLogger(SimpleSentimentAnalyzer.class);
+
     @Autowired
     private PositiveWordsMatcher positiveWordsMatcher;
 
@@ -36,7 +39,9 @@ public class SimpleSentimentAnalyzer {
     private NegativeWordsMatcher negativeWordsMatcher;
 
     public NifOutput getSentiment(String text) {
+        log.info("Retrieving negative matches...");
         Map<String, Integer> negativeWords = negativeWordsMatcher.getNegativeWords(text);
+        log.info("Retrieving positive matches...");
         Map<String, Integer> positiveWords = positiveWordsMatcher.getPositiveWords(text);
         double sentiment = calculateSentiment(positiveWords, negativeWords);
         return new NifOutput("{\"@context\": \"http://eurosentiment.eu/contexts/basecontext.jsonld\"," +
@@ -47,7 +52,9 @@ public class SimpleSentimentAnalyzer {
 
     private double calculateSentiment(Map<String, Integer> positiveWords, Map<String, Integer> negativeWords) {
         int positiveCount = sumMapValues(positiveWords);
+        log.info("Number of positive words:" + positiveCount);
         int negativeCount = sumMapValues(negativeWords);
+        log.info("Number of negative words:" + negativeCount);
         if ((positiveCount + negativeCount) > 0) {
             return ((double)(positiveCount-negativeCount))/(positiveCount + negativeCount);
         }

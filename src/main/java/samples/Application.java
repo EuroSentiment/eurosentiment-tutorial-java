@@ -18,17 +18,22 @@
  */
 package samples;
 
+import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 @ComponentScan({"samples", "utils"})
 @EnableAutoConfiguration
 public class Application {
 
+    private static final Logger log = Logger.getLogger(Application.class);
+
     public static void main(String[] args) {
+        log.info("Starting EUROSENTIMENT samples application.");
         SpringApplication.run(Application.class, args);
     }
 }

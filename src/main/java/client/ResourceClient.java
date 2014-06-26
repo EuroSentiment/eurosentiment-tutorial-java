@@ -21,8 +21,11 @@ package client;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.apache.log4j.Logger;
 
 public class ResourceClient {
+
+    private static final Logger log = Logger.getLogger(ResourceClient.class);
 
     private String resourceUrl;
     private String token;
@@ -38,8 +41,10 @@ public class ResourceClient {
     public NifOutput request(NifInput input) {
         WebResource.Builder builder = this.resource.header("x-eurosentiment-token", this.token)
                                                    .header("content-type", "application/json");
+        log.info("Request to Resources Server at [" + resourceUrl + "] with body: " + input);
         ClientResponse response = builder.post(ClientResponse.class, input.asJson());
         String result = response.getEntity(String.class);
+        log.info("Response:" + result);
         return new NifOutput(result);
     }
 }

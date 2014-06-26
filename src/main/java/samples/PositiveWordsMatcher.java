@@ -22,6 +22,7 @@ import client.NifInput;
 import client.NifOutput;
 import client.ResourceClient;
 import client.ServiceClient;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -32,17 +33,22 @@ import java.util.Set;
 @Component
 public class PositiveWordsMatcher extends WordsMatcher {
 
+    private static final Logger log = Logger.getLogger(PositiveWordsMatcher.class);
+
     public Map<String, Integer> getPositiveWords(String text) {
         NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':'" + text + "'}"));
         String language = languageResult.getJson().getString("dc:language");
+        log.info("The detected language is [" + language + "]");
         NifOutput domainResult = this.domainDetector.request(new NifInput("{'text':'" + text + "'}"));
         String domain = domainResult.getJson().getString("domain");
         String domainName = domain.split(":")[1];
+        log.info("The detected domain is [" + domainName + "]");
         String query = SparqlQueryFactory.getSparql(SparqlQueryFactory.POSITIVE_ENTRIES, language, domainName);
         NifInput input = new NifInput("{'query':'" + query + "', " +
                                        "'format':'application/json'}");
         NifOutput wordsResults = this.resourceClient.request(input);
         Set<String> sentimentWords = extractWordsListFromResponse(wordsResults.getJson());
+        log.info(sentimentWords.size() + " positive words retrieved.");
         return matchWords(text, sentimentWords);
     }
 
