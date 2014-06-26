@@ -38,20 +38,20 @@ public class SimpleSentimentAnalyzer {
     public NifOutput getSentiment(String text) {
         Map<String, Integer> negativeWords = negativeWordsMatcher.getNegativeWords(text);
         Map<String, Integer> positiveWords = positiveWordsMatcher.getPositiveWords(text);
-        float sentiment = calculateSentiment(positiveWords, negativeWords);
+        double sentiment = calculateSentiment(positiveWords, negativeWords);
         return new NifOutput("{\"@context\": \"http://eurosentiment.eu/contexts/basecontext.jsonld\"," +
                              "\"@type\":\"marl:SentimentAnalysis\"," +
                              "\"marl:polarityValue\":" + sentiment +"}");
 
     }
 
-    private float calculateSentiment(Map<String, Integer> positiveWords, Map<String, Integer> negativeWords) {
+    private double calculateSentiment(Map<String, Integer> positiveWords, Map<String, Integer> negativeWords) {
         int positiveCount = sumMapValues(positiveWords);
         int negativeCount = sumMapValues(negativeWords);
         if ((positiveCount + negativeCount) > 0) {
-            return (positiveCount-negativeCount)/(positiveCount + negativeCount);
+            return ((double)(positiveCount-negativeCount))/(positiveCount + negativeCount);
         }
-        return 0.0f;
+        return 0.0d;
     }
 
     private int sumMapValues(Map<String, Integer> words) {
