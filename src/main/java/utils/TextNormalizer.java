@@ -25,7 +25,7 @@ import java.text.Normalizer;
 @Component
 public class TextNormalizer {
 
-    public static String normalizeText(String text) {
+    public String normalizeText(String text) {
         return text == null ? null
                 : Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class PositiveWordsMatcher extends WordsMatcher {
@@ -41,7 +42,7 @@ public class PositiveWordsMatcher extends WordsMatcher {
         NifInput input = new NifInput("{'query':'" + query + "', " +
                                        "'format':'application/json'}");
         NifOutput wordsResults = this.resourceClient.request(input);
-        List<String> sentimentWords = extractWordsListFromResponse(wordsResults.getJson());
+        Set<String> sentimentWords = extractWordsListFromResponse(wordsResults.getJson());
         return matchWords(text, sentimentWords);
     }
 

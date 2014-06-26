@@ -29,9 +29,10 @@ public class TextMatcher {
     @Autowired
     private TextNormalizer normalizer;
 
-    public Map<String, Integer> matchesInText(String text, List<String> words) {
+    public Map<String, Integer> matchesInText(String text, Collection<String> words) {
         Map<String, Integer> results = new HashMap<String, Integer>();
-        List<String> tokenizedText = Arrays.asList(text.split("\\s+"));
+        String normalizedText = normalizer.normalizeText(text);
+        List<String> tokenizedText = Arrays.asList(normalizedText.split("\\s+"));
         for(String word:words) {
             String normalizedWord = normalizer.normalizeText(word);
             int frequency = Collections.frequency(tokenizedText, normalizedWord);

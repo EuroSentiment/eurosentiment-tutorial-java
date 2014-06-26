@@ -27,9 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import utils.TextMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public abstract class WordsMatcher {
@@ -55,17 +53,17 @@ public abstract class WordsMatcher {
     @Autowired
     private TextMatcher textMatcher;
 
-    protected List<String> extractWordsListFromResponse(JSONObject wordsResults) {
-        List<String> result = new ArrayList<String>();
+    protected Set<String> extractWordsListFromResponse(JSONObject wordsResults) {
+        Set<String> result = new HashSet<String>();
         JSONArray bindings = wordsResults.getJSONObject("results").getJSONArray("bindings");
         for(int i=0; i<bindings.length(); i++) {
             JSONObject word = bindings.getJSONObject(i);
-            result.add(word.getJSONObject("wordWithSentiment").getString("value"));
+            result.add(word.getJSONObject("sentimentEntryWR").getString("value"));
         }
         return result;
     }
 
-    protected Map<String, Integer> matchWords(String text, List<String> words) {
+    protected Map<String, Integer> matchWords(String text, Collection<String> words) {
         return textMatcher.matchesInText(text, words);
     }
 
