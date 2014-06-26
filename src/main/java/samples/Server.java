@@ -36,12 +36,12 @@ public class Server {
     @RequestMapping(value = "/sentiment",
                     method = RequestMethod.POST,
                     produces = {"application/json"})
-    public String getSentiment(@RequestBody String input) {
+    public String getSentiment(@RequestBody String input) throws Exception {
         try {
             JSONObject jsonInput = new JSONObject(input);
             return analyzer.getSentiment(jsonInput.getString("input")).toString();
         } catch(Exception e) {
-            throw new WebApplicationException(500);
+            throw e;
         }
     }
 

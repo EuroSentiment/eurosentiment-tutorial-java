@@ -25,7 +25,11 @@ public class NifInput {
     protected JSONObject json = new JSONObject();
 
     public NifInput(String jsonString) {
-        this.json = new JSONObject(jsonString);
+        if(jsonString.isEmpty()) {
+            json = new JSONObject();
+        } else {
+            json = new JSONObject(jsonString);
+        }
     }
 
     public String asJson() {
