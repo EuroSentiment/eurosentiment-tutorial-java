@@ -25,7 +25,11 @@ public class NifOutput {
     JSONObject json;
 
     public NifOutput(String jsonString) {
-        json = new JSONObject(jsonString);
+        if(jsonString.isEmpty()) {
+            json = new JSONObject();
+        } else {
+            json = new JSONObject(jsonString);
+        }
     }
 
     public JSONObject getJson() {

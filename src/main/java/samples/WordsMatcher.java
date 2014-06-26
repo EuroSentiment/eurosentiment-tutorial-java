@@ -37,6 +37,9 @@ public abstract class WordsMatcher {
     @Value("${eurosentiment.language.detection.url}")
     protected String languageDetectionServiceUrl;
 
+    @Value("${eurosentiment.domain.detection.url}")
+    protected String domainDetectionServiceUrl;
+
     @Value("${eurosentiment.resources.url}")
     protected String resourcesUrl;
 
@@ -44,6 +47,8 @@ public abstract class WordsMatcher {
     protected String token;
 
     protected ServiceClient languageDetector;
+
+    protected ServiceClient domainDetector;
 
     protected ResourceClient resourceClient;
 

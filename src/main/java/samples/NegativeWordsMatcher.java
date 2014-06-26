@@ -32,9 +32,12 @@ import java.util.Map;
 public class NegativeWordsMatcher extends WordsMatcher{
 
     public Map<String, Integer> getNegativeWords(String text) {
-        NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':" + text + "}"));
+        NifOutput languageResult = this.languageDetector.request(new NifInput("{'text':'" + text + "'}"));
         String language = languageResult.getJson().getString("dc:language");
-        String query = SparqlQueryFactory.getQuery(SparqlQueryFactory.ELECTRONICS_NEGATIVE_ENTRIES, language);
+        NifOutput domainResult = this.domainDetector.request(new NifInput("{'text':'" + text + "'}"));
+        String domain = domainResult.getJson().getString("domain");
+        String domainName = domain.split(":")[1];
+        String query = SparqlQueryFactory.getSparql(SparqlQueryFactory.NEGATIVE_ENTRIES, language, domainName);
         NifInput input = new NifInput("{'query':'" + query + "', " +
                 "'format':'application/json'}");
         NifOutput wordsResults = this.resourceClient.request(input);
@@ -45,6 +48,7 @@ public class NegativeWordsMatcher extends WordsMatcher{
     @PostConstruct
     public void initialized() throws Exception {
         this.languageDetector = new ServiceClient(this.languageDetectionServiceUrl, this.token);
+        this.domainDetector = new ServiceClient(this.domainDetectionServiceUrl, this.token);
         this.resourceClient =  new ResourceClient(this.resourcesUrl, this.token);
     }
 
